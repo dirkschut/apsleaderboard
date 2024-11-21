@@ -23,6 +23,10 @@
   "imports": {
     "$fresh/": "https://deno.land/x/fresh@1.7.3/",
     "@5t111111/fresh-session": "jsr:@5t111111/fresh-session@^0.1.13",
+    "@types/pg": "npm:@types/pg@^8.11.10",
+    "drizzle-kit": "npm:drizzle-kit@^0.28.1",
+    "drizzle-orm": "npm:drizzle-orm@^0.36.3",
+    "pg": "npm:pg@^8.13.1",
     "preact": "https://esm.sh/preact@10.22.0",
     "preact/": "https://esm.sh/preact@10.22.0/",
     "@preact/signals": "https://esm.sh/*@preact/signals@1.2.2",

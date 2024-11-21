@@ -1,8 +1,9 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
 import Choose from "../islands/choose.tsx";
 import { Session } from "@5t111111/fresh-session";
+import { db, getProblemCount } from "../src/db/db.ts";
 
-const _NUM_PROBLEMS = 2;
+let _NUM_PROBLEMS = -1;
 
 interface State {
   session: Session;
@@ -11,6 +12,12 @@ interface State {
 export const handler: Handlers<any, State> = {
   async GET(_req, ctx) {
     const session = ctx.state.session;
+
+    if (_NUM_PROBLEMS === -1) {
+      console.log("Getting problem count");
+      _NUM_PROBLEMS = await getProblemCount();
+      console.log(`Got ${_NUM_PROBLEMS} problems`);
+    }
 
     if (!session.get<number>("sessiontid")) {
       session.set(
@@ -23,7 +30,10 @@ export const handler: Handlers<any, State> = {
       session.set("problem1", Math.floor(Math.random() * _NUM_PROBLEMS));
     }
 
-    if (!session.get<number>("problem2")) {
+    if (
+      !session.get<number>("problem2") ||
+      session.get("problem1") === session.get("problem2")
+    ) {
       let problem2 = Math.floor(Math.random() * _NUM_PROBLEMS);
       while (problem2 === session.get("problem1")) {
         problem2 = Math.floor(Math.random() * _NUM_PROBLEMS);
