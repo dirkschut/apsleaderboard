@@ -1,6 +1,43 @@
+import { Handlers, PageProps } from "$fresh/server.ts";
 import Choose from "../islands/choose.tsx";
+import { Session } from "@5t111111/fresh-session";
 
-export default function Home() {
+const _NUM_PROBLEMS = 2;
+
+interface State {
+  session: Session;
+}
+
+export const handler: Handlers<any, State> = {
+  async GET(_req, ctx) {
+    const session = ctx.state.session;
+
+    if (!session.get<number>("sessiontid")) {
+      session.set(
+        "sessiontid",
+        Math.floor(Math.random() * Number.MAX_SAFE_INTEGER),
+      );
+    }
+
+    if (!session.get<number>("problem1")) {
+      session.set("problem1", Math.floor(Math.random() * _NUM_PROBLEMS));
+    }
+
+    if (!session.get<number>("problem2")) {
+      let problem2 = Math.floor(Math.random() * _NUM_PROBLEMS);
+      while (problem2 === session.get("problem1")) {
+        problem2 = Math.floor(Math.random() * _NUM_PROBLEMS);
+      }
+      session.set("problem2", problem2);
+    }
+
+    return ctx.render({ session });
+  },
+};
+
+export default function ProfilePage({ data }: PageProps) {
+  const { session } = data;
+  console.log(session);
   return (
     <div class="px-4 py-8 mx-auto">
       <div class="max-w-screen-md mx-auto flex flex-col items-center justify-center">
