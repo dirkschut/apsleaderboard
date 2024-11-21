@@ -1,7 +1,7 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
 import Choose from "../islands/choose.tsx";
 import { Session } from "@5t111111/fresh-session";
-import { createSessionIfNotExists, db, getProblemCount } from "../src/db/db.ts";
+import { createSessionIfNotExists, getProblemCount } from "../src/db/db.ts";
 
 let _NUM_PROBLEMS = -1;
 
@@ -14,9 +14,7 @@ export const handler: Handlers<any, State> = {
     const session = ctx.state.session;
 
     if (_NUM_PROBLEMS === -1) {
-      console.log("Getting problem count");
       _NUM_PROBLEMS = await getProblemCount();
-      console.log(`Got ${_NUM_PROBLEMS} problems`);
     }
 
     if (!session.get<number>("sessiontid")) {
@@ -49,9 +47,8 @@ export const handler: Handlers<any, State> = {
   },
 };
 
-export default function ProfilePage({ data }: PageProps) {
+export default function Indexpage({ data }: PageProps) {
   const { session } = data;
-  console.log(session);
   return (
     <div class="px-4 py-8 mx-auto">
       <div class="max-w-screen-md mx-auto flex flex-col items-center justify-center">
