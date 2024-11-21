@@ -3,8 +3,11 @@ import { Session } from "@5t111111/fresh-session";
 import { integer } from "drizzle-orm/sqlite-core";
 import {
   createSessionIfNotExists,
+  db,
   getProblemById,
   getProblemCount,
+  getSessionDBID,
+  insertVote,
 } from "../src/db/db.ts";
 
 let _NUM_PROBLEMS = -1;
@@ -14,6 +17,44 @@ interface State {
 }
 
 export const handler: Handlers<any, State> = {
+  async POST(req, ctx) {
+    const session = ctx.state.session;
+    const formData = await req.formData();
+    const votedLeft = formData.get("votedLeft");
+    let votedforID = session.get<number>("problem1") ?? 0;
+    let votedagainstID = session.get<number>("problem2") ?? 0;
+    console.log(votedLeft);
+    if (votedLeft === "false") {
+      votedforID = session.get<number>("problem2") ?? 0;
+      votedagainstID = session.get<number>("problem1") ?? 0;
+    }
+
+    if (votedforID === 0 || votedagainstID === 0) {
+      return new Response(null, {
+        status: 400,
+        headers: {
+          Location: "/",
+        },
+      });
+    }
+
+    const dbsessionid = await getSessionDBID(session.get("sessiontid") || "");
+
+    await insertVote(
+      votedforID,
+      votedagainstID,
+      dbsessionid,
+      votedLeft === "true",
+    );
+
+    return new Response(null, {
+      status: 303,
+      headers: {
+        Location: "/",
+      },
+    });
+  },
+
   async GET(_req, ctx) {
     const session = ctx.state.session;
 
@@ -66,24 +107,32 @@ export default function Indexpage({ data }: PageProps) {
           and tap/click on it.
         </p>
         <div class="flex flex-row gap-4 my-4">
-          <div
-            id="problem1"
-            class="basis-1/2 rounded overflow-hidden shadow-lg p-4 bg-slate-700"
-          >
-            <h3 id="problem1Title" class="font-bold text-xl mb-2">
-              {problem1.title}
-            </h3>
-            <p id="problem1description">{problem1.description}</p>
-          </div>
-          <div
-            id="problem2"
-            class="basis-1/2 rounded overflow-hidden shadow-lg p-4 bg-slate-700"
-          >
-            <h3 id="problem2Title" class="font-bold text-xl mb-2">
-              {problem2.title}
-            </h3>
-            <p id="problem2description">{problem2.description}</p>
-          </div>
+          <form method="POST" action="/">
+            <input type="hidden" name="votedLeft" value="true" />
+            <button
+              type="submit"
+              id="problem1"
+              class="basis-1/2 rounded overflow-hidden shadow-lg p-4 bg-slate-700"
+            >
+              <h3 id="problem1Title" class="font-bold text-xl mb-2">
+                {problem1.title}
+              </h3>
+              <p id="problem1description">{problem1.description}</p>
+            </button>
+          </form>
+          <form method="POST" action="/">
+            <input type="hidden" name="votedLeft" value="false" />
+            <button
+              type="submit"
+              id="problem2"
+              class="basis-1/2 rounded overflow-hidden shadow-lg p-4 bg-slate-700"
+            >
+              <h3 id="problem2Title" class="font-bold text-xl mb-2">
+                {problem2.title}
+              </h3>
+              <p id="problem2description">{problem2.description}</p>
+            </button>
+          </form>
         </div>
         <hr class="my-8 w-full border-gray-500" />
         <div>
