@@ -182,7 +182,8 @@ export default function Indexpage({ data }: PageProps) {
           <p>
             I made this website by throwing together some terrible Typescript
             code. More specifically, I used Deno, Drizzle, Fresh, and
-            TailwindCSS.
+            TailwindCSS. (I did actually use some terrible Python code as well
+            to get the data from the podcast.)
           </p>
           <h2 class="text-2xl font-bold my-4">Is this open source?</h2>
           <p>
