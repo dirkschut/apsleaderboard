@@ -178,6 +178,22 @@ export default function Indexpage({ data }: PageProps) {
             No, this was made without their knowledge or consent. I hope they
             like it though.
           </p>
+          <h2 class="text-2xl font-bold my-4">How did you make this?</h2>
+          <p>
+            I made this website by throwing together some terrible Typescript
+            code. More specifically, I used Deno, Drizzle, Fresh, and
+            TailwindCSS.
+          </p>
+          <h2 class="text-2xl font-bold my-4">Is this open source?</h2>
+          <p>
+            Yes, you can find the source code on{" "}
+            <a
+              href="https://github.com/dirkschut/apsleaderboard/"
+              class="underline hover:no-underline"
+            >
+              Github
+            </a>
+          </p>
         </div>
       </div>
     </div>
