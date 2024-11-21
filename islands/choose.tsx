@@ -23,11 +23,6 @@ export default function MyIsland() {
           <p id="problem2description">Problem Description</p>
         </div>
       </div>
-      <div>
-        <p class="flex flex-row gap-4 rounded overflow-hidden shadow-lg p-4 bg-slate-700">
-          They're about equally good
-        </p>
-      </div>
     </main>
   );
 }
