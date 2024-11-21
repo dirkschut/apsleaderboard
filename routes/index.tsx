@@ -47,6 +47,8 @@ export const handler: Handlers<any, State> = {
       votedLeft === "true",
     );
 
+    session.set("newProblems", true);
+
     return new Response(null, {
       status: 303,
       headers: {
@@ -73,13 +75,14 @@ export const handler: Handlers<any, State> = {
     const expiry = session.get<string>("expiry") || new Date().toISOString();
     createSessionIfNotExists(sessiontid, new Date(expiry));
 
-    if (!session.get<number>("problem1")) {
+    if (!session.get<number>("problem1") || session.get("newProblems")) {
       session.set("problem1", Math.floor(Math.random() * _NUM_PROBLEMS));
     }
 
     if (
       !session.get<number>("problem2") ||
-      session.get("problem1") === session.get("problem2")
+      session.get("problem1") === session.get("problem2") ||
+      session.get("newProblems")
     ) {
       let problem2 = Math.floor(Math.random() * _NUM_PROBLEMS);
       while (problem2 === session.get("problem1")) {
@@ -88,6 +91,7 @@ export const handler: Handlers<any, State> = {
       session.set("problem2", problem2);
     }
 
+    session.set("newProblems", false);
     const problem1Id = session.get<number>("problem1") || 1;
     const problem1 = await getProblemById(problem1Id);
     const problem2Id = session.get<number>("problem2") || 1;
