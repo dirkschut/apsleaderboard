@@ -1,7 +1,7 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
 import Choose from "../islands/choose.tsx";
 import { Session } from "@5t111111/fresh-session";
-import { db, getProblemCount } from "../src/db/db.ts";
+import { createSessionIfNotExists, db, getProblemCount } from "../src/db/db.ts";
 
 let _NUM_PROBLEMS = -1;
 
@@ -25,6 +25,10 @@ export const handler: Handlers<any, State> = {
         Math.floor(Math.random() * Number.MAX_SAFE_INTEGER),
       );
     }
+
+    const sessiontid = session.get<string>("sessiontid") || "";
+    const expiry = session.get<string>("expiry") || new Date().toISOString();
+    createSessionIfNotExists(sessiontid, new Date(expiry));
 
     if (!session.get<number>("problem1")) {
       session.set("problem1", Math.floor(Math.random() * _NUM_PROBLEMS));

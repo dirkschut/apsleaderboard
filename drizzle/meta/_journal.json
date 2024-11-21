@@ -15,6 +15,13 @@
       "when": 1732210192944,
       "tag": "0001_majestic_shockwave",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1732215034031,
+      "tag": "0002_long_adam_destine",
+      "breakpoints": true
     }
   ]
 }

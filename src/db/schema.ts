@@ -8,6 +8,12 @@ import {
   timestamp,
 } from "drizzle-orm/pg-core";
 
+export const sessions = pgTable("sessions", {
+  id: serial().primaryKey().notNull(),
+  token: text(),
+  expiry: timestamp(),
+});
+
 export const problems = pgTable("problems", {
   id: serial().primaryKey().notNull(),
   title: text(),
@@ -20,7 +26,7 @@ export const votes = pgTable("votes", {
   id: serial().primaryKey().notNull(),
   problemId: integer("problem_id"),
   opposingProblemId: integer("opposing_problem_id"),
-  voter: text(),
+  sessionID: integer("session_id"),
   leftorright: boolean(),
   dateTimeVoted: timestamp("date_time_voted", { mode: "string" }).defaultNow(),
 }, (table) => {
@@ -34,6 +40,11 @@ export const votes = pgTable("votes", {
       columns: [table.opposingProblemId],
       foreignColumns: [problems.id],
       name: "votes_opposing_problem_id_fkey",
+    }),
+    votesSessionIdFkey: foreignKey({
+      columns: [table.sessionID],
+      foreignColumns: [sessions.id],
+      name: "votes_session_id_fkey",
     }),
   };
 });

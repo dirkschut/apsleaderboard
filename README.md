@@ -14,3 +14,8 @@ deno task start
 ```
 
 This will watch the project directory and restart as necessary.
+
+## Database commands
+
+- Generate migrations etc: `deno -A npm:drizzle-kit generate`
+- Push changes to database: `deno -A npm:drizzle-kit push`
