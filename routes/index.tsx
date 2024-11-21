@@ -1,4 +1,3 @@
-import { useSignal } from "@preact/signals";
 import Choose from "../islands/choose.tsx";
 
 export default function Home() {
