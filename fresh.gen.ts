@@ -8,7 +8,7 @@ import * as $api_joke from "./routes/api/joke.ts";
 import * as $api_problems from "./routes/api/problems.ts";
 import * as $greet_name_ from "./routes/greet/[name].tsx";
 import * as $index from "./routes/index.tsx";
-import * as $choose from "./islands/choose.tsx";
+
 import type { Manifest } from "$fresh/server.ts";
 
 const manifest = {
@@ -20,9 +20,7 @@ const manifest = {
     "./routes/greet/[name].tsx": $greet_name_,
     "./routes/index.tsx": $index,
   },
-  islands: {
-    "./islands/choose.tsx": $choose,
-  },
+  islands: {},
   baseUrl: import.meta.url,
 } satisfies Manifest;
 

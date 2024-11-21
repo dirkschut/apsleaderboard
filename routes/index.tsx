@@ -1,7 +1,11 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
-import Choose from "../islands/choose.tsx";
 import { Session } from "@5t111111/fresh-session";
-import { createSessionIfNotExists, getProblemCount } from "../src/db/db.ts";
+import { integer } from "drizzle-orm/sqlite-core";
+import {
+  createSessionIfNotExists,
+  getProblemById,
+  getProblemCount,
+} from "../src/db/db.ts";
 
 let _NUM_PROBLEMS = -1;
 
@@ -43,12 +47,16 @@ export const handler: Handlers<any, State> = {
       session.set("problem2", problem2);
     }
 
-    return ctx.render({ session });
+    const problem1Id = session.get<number>("problem1") || 1;
+    const problem1 = await getProblemById(problem1Id);
+    const problem2Id = session.get<number>("problem2") || 1;
+    const problem2 = await getProblemById(problem2Id);
+    return ctx.render({ session, problem1, problem2 });
   },
 };
 
 export default function Indexpage({ data }: PageProps) {
-  const { session } = data;
+  const { session, problem1, problem2 } = data;
   return (
     <div class="px-4 py-8 mx-auto">
       <div class="max-w-screen-md mx-auto flex flex-col items-center justify-center">
@@ -57,7 +65,26 @@ export default function Indexpage({ data }: PageProps) {
           Please use your own judgement to decide which problem you liked more
           and tap/click on it.
         </p>
-        <Choose />
+        <div class="flex flex-row gap-4 my-4">
+          <div
+            id="problem1"
+            class="basis-1/2 rounded overflow-hidden shadow-lg p-4 bg-slate-700"
+          >
+            <h3 id="problem1Title" class="font-bold text-xl mb-2">
+              {problem1.title}
+            </h3>
+            <p id="problem1description">{problem1.description}</p>
+          </div>
+          <div
+            id="problem2"
+            class="basis-1/2 rounded overflow-hidden shadow-lg p-4 bg-slate-700"
+          >
+            <h3 id="problem2Title" class="font-bold text-xl mb-2">
+              {problem2.title}
+            </h3>
+            <p id="problem2description">{problem2.description}</p>
+          </div>
+        </div>
         <hr class="my-8 w-full border-gray-500" />
         <div>
           <h1 class="text-4xl font-bold">FAQ</h1>

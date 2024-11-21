@@ -43,3 +43,10 @@ export async function createSessionIfNotExists(token: string, expiry: Date) {
     await createSession(token, expiry);
   }
 }
+
+export async function getProblemById(id: number) {
+  const problems = await db.select().from(problemSchema).where(
+    eq(problemSchema.id, id),
+  );
+  return problems[0];
+}
