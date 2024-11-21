@@ -8,7 +8,7 @@ export default function App({ Component }: PageProps) {
         <title>apsleaderboard</title>
         <link rel="stylesheet" href="/styles.css" />
       </head>
-      <body>
+      <body class="bg-slate-800 text-slate-100">
         <Component />
       </body>
     </html>
